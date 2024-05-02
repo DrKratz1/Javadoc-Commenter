@@ -1,4 +1,4 @@
-Written by Winston Zhang - Latest 02/05/24
+Latest 02/05/24
 
 **Intro**
 

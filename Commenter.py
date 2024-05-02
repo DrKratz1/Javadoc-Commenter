@@ -4,7 +4,7 @@ import csv
 directory = os.path.dirname(os.path.realpath(__file__))
 directory += "\\"
 
-setting = input("to find and write parameters type 1, to comment, type 2\nDO NOTE THAT IF YOU PRESS 1, CHANGES YOU HAVE MADE TO THE CSV FILES WILL BE OVERWRITTEN\n")
+setting = input("to find and write parameters type 1, to comment, type 2\n")
 
 
 if setting == "1":

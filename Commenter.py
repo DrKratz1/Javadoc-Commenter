@@ -137,6 +137,26 @@ if (write):
     parameterFilename = "parameters.csv"
     functionFilename = "functions.csv"
 
+    # check if both files already exist
+    if os.path.exists(parameterFilename) and os.path.exists(functionFilename):
+        # go through each file and copy existing data into new data
+        with open(parameterFilename, "r") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                for parameter in parameterData:
+                    if parameter["Parameter"] == row["Parameter"]:
+                        parameter["Explanation"] = row["Explanation"]
+        csvfile.close()
+        
+        with open(functionFilename, "r") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if row["File"] in functionNames:
+                    functionNames[row["File"]][row["Function"]] = [row["ReturnType"], row["Explanation"], row["Parameters"].split("|"), row["ReturnExplanation"]]
+        csvfile.close()
+        
+    
+    # writing out to parameters and functions files
     with open(parameterFilename, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=paramFields)
         writer.writeheader()
@@ -156,8 +176,6 @@ if (write):
     print("finished writing")
     
 elif not write:
-    outputFile = "output.txt"
-    
     # reading parameters from csv file
     parameters = {}
     with open("parameters.csv", "r") as csvfile:
@@ -176,8 +194,6 @@ elif not write:
             functions[row["File"]][row["Function"]] = [row["ReturnType"], row["Explanation"], row["Parameters"], row["ReturnExplanation"]]
     csvfile.close()
     
-    outFile = ""
-    
     start = "    /***"
     middle = "     * "
     end = "     */"
@@ -186,8 +202,6 @@ elif not write:
     for item in functions:
         outFile = item[:-5] + "_commented.txt"
         with open(outFile, "w") as output:
-            output.write("File: " + item + "\n\n")
-            
             # find where the functions are
             with open(item, "r") as file:
                 for line in file:
@@ -227,9 +241,12 @@ elif not write:
                                 if (functionParam == ""): continue
                                 output.write(middle + "@param " + functionParam + ": " + parameters[functionParam] + "\n")
                             # return type
-                            output.write(middle + "@return " + functions[item][functionName][0] + " " + functions[item][functionName][3] + "\n")
+                            output.write(middle + "@return " + functions[item][functionName][0] + ": " + functions[item][functionName][3] + "\n")
                             output.write(end + "\n")
                             output.write(originalLine)
+                    elif line.startswith(start.lstrip()) or line.startswith(middle.lstrip().rstrip()) or line.startswith(end.lstrip()):
+                        # skip if it is a javadoc comment
+                        continue
                     else:
                         # write line anyways lol
                         fail = True

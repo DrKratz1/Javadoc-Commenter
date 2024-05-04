@@ -1,6 +1,5 @@
-Latest 02/05/24
-
-**Intro**
+Latest 05/05/24
+# JavaDoc Commenter
 
 Hello everyone! I have taken it upon myself to write a semi-automatic Javadoc Commenter which will generate 2 files for convenient management of all JavaDoc related comments for 
 any directory. Currently, it does not have a file recurse implementation so if you, the user, wants to utilize this tool on subdirectories, feel free to add your own implementation 
@@ -9,7 +8,7 @@ any directory. Currently, it does not have a file recurse implementation so if y
 
 
 
-**IMPORTANT**
+## **IMPORTANT**
 
 This will add 2 files: function.csv and parameters.csv, which will be the data storage for program when running to auto comment your files.
 This is purely a commenter and will not add nor remove any code - think of this as a sort of auto-formatter such as prettier.
@@ -22,7 +21,7 @@ Rainbow CSV: https://marketplace.visualstudio.com/items?itemName=mechatroner.rai
 
 
 
-**Usage**
+## **Usage**
 1. Download the Commenter.py file, and copy it into your "src" folder where you want it to run on all the .java files.
 2. Make sure that you have Python installed (as long as its Python 3 it will be fine)
 3. In the terminal, check that the current working directory is the "src" folder - ie. path something like: C:\Users\...\...project-2\src.
@@ -55,7 +54,7 @@ Rainbow CSV: https://marketplace.visualstudio.com/items?itemName=mechatroner.rai
 
 
 
-**Issues**
+## **Issues**
 
 If your function is structured like this: "visibilityModifier returnType functionName(parameters);" - it will not detect it and will ignore it when rewriting, the fix for this is just 
 to add in the "abstract" keyword into the line and it will now detect it and add comments to it.
@@ -63,7 +62,7 @@ to add in the "abstract" keyword into the line and it will now detect it and add
 
 
 
-**Future Features**
+## **Future Features**
 
 Making GUI
 
@@ -78,7 +77,7 @@ Add ability to ignore files for files that you don't want commented, or changed 
 
 
 
-**Contributing**
+## **Contributing**
 First of all - apologies for the code being quite questionable - it was written on the principle of get it to work then think about if I want to make it cleaner later (also if you can't tell I'm not the greatest programmer). If you would like to contribute, thank you, and please look into either **Issues** for things to fix or **Future Features** to implement new ideas. If you have any new ideas about the project, feel free to do so, and if they are overall beneficial, then I will add them.
 
 Honestly I don't expect this project to become anything large, but if anyone at all decides to care and contribute it would make my day <3.
@@ -86,7 +85,7 @@ Honestly I don't expect this project to become anything large, but if anyone at 
 
 
 
-**Changelog**
+## **Changelog**
 
 02/05 - Initial version uploaded
 

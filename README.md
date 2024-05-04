@@ -62,6 +62,30 @@ to add in the "abstract" keyword into the line and it will now detect it and add
 
 
 
+
+**Future Features**
+
+Making GUI
+
+Recursively going through folders to locate .java files
+
+Reading in existing doc comments to csv storages
+
+REFACTOR CODE
+
+Add ability to ignore files for files that you don't want commented, or changed by program in anyway
+
+
+
+
+**Contributing**
+First of all - apologies for the code being quite questionable - it was written on the principle of get it to work then think about if I want to make it cleaner later (also if you can't tell I'm not the greatest programmer). If you would like to contribute, thank you, and please look into either **Issues** for things to fix or **Future Features** to implement new ideas. If you have any new ideas about the project, feel free to do so, and if they are overall beneficial, then I will add them.
+
+Honestly I don't expect this project to become anything large, but if anyone at all decides to care and contribute it would make my day <3.
+
+
+
+
 **Changelog**
 
 02/05 - Initial version uploaded

@@ -50,7 +50,7 @@ Rainbow CSV: https://marketplace.visualstudio.com/items?itemName=mechatroner.rai
 
 7. All done!
 
-8. (Optional) If you would like to take out all JavaDoc Comments, type "3" and it will delete EVERY JAVADOC COMMENT MADE.
+8. (Optional) If you would like to take out all JavaDoc Comments, type "3" and it will delete **EVERY JAVADOC COMMENT MADE** - make sure you have all JavaDoc related comments backed up into generated csv files.
 
 
 

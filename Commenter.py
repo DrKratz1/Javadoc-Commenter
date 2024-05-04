@@ -7,6 +7,9 @@ directory += "\\"
 setting = input("to find and write parameters type 1, to comment, type 2, to clear doc comments, type 3\n")
 state = "Nothing"
 
+parameterFilename = "parameters.csv"
+functionFilename = "functions.csv"
+
 if setting == "1":
     state = "read"
 elif setting  == "2":
@@ -137,9 +140,6 @@ if (state == "read"):
     parameterSorted = sorted(list(parameters))
     parameterData = [{"Parameter": parameter, "Explanation": ""} for parameter in parameterSorted]
 
-    parameterFilename = "parameters.csv"
-    functionFilename = "functions.csv"
-
     # check if both files already exist
     if os.path.exists(parameterFilename) and os.path.exists(functionFilename):
         # go through each file and copy existing data into new data
@@ -179,9 +179,13 @@ if (state == "read"):
     print("finished writing")
     
 elif (state == "write"):
+    if not os.path.exists(parameterFilename) or not os.path.exists(functionFilename):
+        print("parameters.csv or functions.csv not found")
+        exit()
+
     # reading parameters from csv file
     parameters = {}
-    with open("parameters.csv", "r") as csvfile:
+    with open(parameterFilename, "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             parameters[row["Parameter"]] = row["Explanation"]
@@ -189,7 +193,7 @@ elif (state == "write"):
     
     # reading functions from csv file
     functions = {}
-    with open("functions.csv", "r") as csvfile:
+    with open(functionFilename, "r") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             if row["File"] not in functions:
@@ -289,6 +293,10 @@ elif (state == "write"):
     print("finished commenting go check the files")
 
 elif (state == "clear"):
+    if not os.path.exists(parameterFilename) or not os.path.exists(functionFilename):
+        print("parameters.csv or functions.csv not found")
+        exit()
+
     for filename in os.listdir(directory):
         allLines = []
         if not filename.endswith(".java"):

@@ -65,4 +65,5 @@ to add in the "abstract" keyword into the line and it will now detect it and add
 **Changelog**
 
 02/05 - Initial version uploaded
+
 05/05 - Updated to put comments directly into .java files and added doc removal functionality

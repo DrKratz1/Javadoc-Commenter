@@ -26,7 +26,7 @@ if (state == "read"):
     for filename in os.listdir(directory):
         data[filename] = {}
         if filename.endswith(".java"):
-            # exclude IOUtils.java
+            # exclude IOUtils.java  TODO: change this because this is specific for my uni project
             if filename == "IOUtils.java":
                 continue
             
@@ -296,7 +296,7 @@ elif (state == "clear"):
         if not filename.endswith(".java"):
             continue
 
-        # exclude IOUtils.java
+        # exclude IOUtils.java  TODO: change this because this is specific for my uni project
         if filename == "IOUtils.java":
             continue
         

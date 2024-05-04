@@ -21,10 +21,10 @@ else:
     exit()
 
 if (state == "read"):
-    enda = {}
+    data = {}
 
     for filename in os.listdir(directory):
-        enda[filename] = {}
+        data[filename] = {}
         if filename.endswith(".java"):
             # exclude IOUtils.java
             if filename == "IOUtils.java":
@@ -110,26 +110,25 @@ if (state == "read"):
                     
                     if functionName != "":
                         # print(filename, returnType, functionName, str(currentParameters), " ".join(line))
-                        enda[filename][functionName] = [returnType, currentParameters]
-            print(filename + " done")
+                        data[filename][functionName] = [returnType, currentParameters]
             f.close()
     
     # getting a set of all the parameters
     parameters = set()
-    for item in enda:
-        for function in enda[item]:
-            for parameter in enda[item][function][1]:
+    for item in data:
+        for function in data[item]:
+            for parameter in data[item][function][1]:
                 if (parameter != ""): parameters.add(parameter)
                 
-    functionNames = {item: {} for item in enda}
-    for item in enda:
-        for function in enda[item]:
+    functionNames = {item: {} for item in data}
+    for item in data:
+        for function in data[item]:
                 if "set" in function:
-                    functionNames[item][function] = [enda[item][function][0], "Sets the value of " + function[3:].lower(), enda[item][function][1], ""]
+                    functionNames[item][function] = [data[item][function][0], "Sets the value of " + function[3:].lower(), data[item][function][1], ""]
                 elif "get" in function:
-                    functionNames[item][function] = [enda[item][function][0], "Returns the value of " + function[3:].lower(), enda[item][function][1], ": value of " + function[3:].lower()]
+                    functionNames[item][function] = [data[item][function][0], "Returns the value of " + function[3:].lower(), data[item][function][1], ": value of " + function[3:].lower()]
                 else:
-                    functionNames[item][function] = [enda[item][function][0], "", enda[item][function][1], ""]
+                    functionNames[item][function] = [data[item][function][0], "", data[item][function][1], ""]
 
 
     # writing parameters to a csv file
@@ -176,7 +175,7 @@ if (state == "read"):
     
     csvfile.close()
 
-    print("finished writing")
+    print("finished writing parameters and functions to csv files")
     
 elif (state == "write"):
     if not os.path.exists(parameterFilename) or not os.path.exists(functionFilename):
@@ -288,15 +287,10 @@ elif (state == "write"):
         with open(outFile, "w") as output:
             for line in writeLines:
                 output.write(line)
-            # print(item + " done")
             
     print("finished commenting go check the files")
 
 elif (state == "clear"):
-    if not os.path.exists(parameterFilename) or not os.path.exists(functionFilename):
-        print("parameters.csv or functions.csv not found")
-        exit()
-
     for filename in os.listdir(directory):
         allLines = []
         if not filename.endswith(".java"):
@@ -329,7 +323,6 @@ elif (state == "clear"):
         with open(filename, "w") as file:
             for line in allLines:
                 file.write(line)
-            print(filename + " done")
         file.close()
 
     print("finished clearing comments go check the files")

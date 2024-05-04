@@ -1,4 +1,4 @@
-Written by Winston Zhang - Latest 02/05/24
+Latest 02/05/24
 
 **Intro**
 
@@ -31,7 +31,7 @@ Rainbow CSV: https://marketplace.visualstudio.com/items?itemName=mechatroner.rai
 
 4. Then, run the program with "python Commenter.py" for Windows - I'm not too sure what the equivalent is for Mac/Linux - look online for this
    
-5. It should prompt you to type in either "1" or "2".
+5. It should prompt you to type in either "1" or "2" or "3".
  
 	5.1 "1" will read all your .java files and generate the 2 storage csv files.
    
@@ -46,10 +46,11 @@ Rainbow CSV: https://marketplace.visualstudio.com/items?itemName=mechatroner.rai
 
    ![image](https://github.com/DrKratz1/Javadoc-Commenter/assets/141234325/56326b2b-11f4-40d2-bd2a-b505ac53b914)
 
-6. Once all data has been filled in, rerun the code and type "2" then press enter. This will add in JavaDoc comments to your code. (As of now, it outputs into a separate "filename_commented.txt" file which you will copy and paste the text from into your original .java file. I will need to add in a feature to completely wipe all JavaDoc comments
-from a file before I am comfortable making the script write directly into the .java files.
+6. Once all data has been filled in, rerun the code and type "2" then press enter. This will add in JavaDoc comments to your code.
 
 7. All done!
+
+8. (Optional) If you would like to take out all JavaDoc Comments, type "3" and it will delete EVERY JAVADOC COMMENT MADE.
 
 
 
@@ -64,3 +65,4 @@ to add in the "abstract" keyword into the line and it will now detect it and add
 **Changelog**
 
 02/05 - Initial version uploaded
+05/05 - Updated to put comments directly into .java files and added doc removal functionality

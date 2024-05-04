@@ -4,18 +4,20 @@ import csv
 directory = os.path.dirname(os.path.realpath(__file__))
 directory += "\\"
 
-setting = input("to find and write parameters type 1, to comment, type 2\n")
-
+setting = input("to find and write parameters type 1, to comment, type 2, to clear doc comments, type 3\n")
+state = "Nothing"
 
 if setting == "1":
-    write = True
+    state = "read"
 elif setting  == "2":
-    write = False
+    state = "write"
+elif setting == "3":
+    state = "clear"
 else:
     print("Invalid input")
     exit()
 
-if (write):
+if (state == "read"):
     enda = {}
 
     for filename in os.listdir(directory):
@@ -32,7 +34,7 @@ if (write):
                 line = line.rstrip()
                 functionName = ""
 
-                if line.startswith("public") or line.startswith("private") or line.startswith("protected") or line.startswith("default"):
+                if line.startswith("public") or line.startswith("private") or line.startswith("protected") or line.startswith("default") and "=" not in line:
                     # remove " {" or ";" from the end of the line
                     if line.endswith("{"):
                         line = line[:-2]
@@ -106,6 +108,7 @@ if (write):
                     if functionName != "":
                         # print(filename, returnType, functionName, str(currentParameters), " ".join(line))
                         enda[filename][functionName] = [returnType, currentParameters]
+            print(filename + " done")
             f.close()
     
     # getting a set of all the parameters
@@ -175,7 +178,7 @@ if (write):
 
     print("finished writing")
     
-elif not write:
+elif (state == "write"):
     # reading parameters from csv file
     parameters = {}
     with open("parameters.csv", "r") as csvfile:
@@ -200,57 +203,125 @@ elif not write:
     
     
     for item in functions:
-        outFile = item[:-5] + "_commented.txt"
-        with open(outFile, "w") as output:
-            # find where the functions are
-            with open(item, "r") as file:
-                for line in file:
-                    originalLine = line
-                    fail = False
-                    line = line.lstrip().rstrip()
-                    if line.startswith("public") or line.startswith("private") or line.startswith("protected") or line.startswith("default"):
-                        if line.endswith("{") or line.endswith(";"):
-                            line = line[:-2]
-                        elif "abstract" in  line and line.endswith(";"):
-                            line = line[:-1]
+        outFile = item
+        writeLines = []
+        normalComment = False
+        with open(item, "r") as file:
+            for line in file:
+                originalLine = line
+                fail = False
+                line = line.lstrip().rstrip()
+                
+                # skip if it is assigning something to somewhere
+                if "=" in line:
+                    fail = True
+
+                # dealing with normal comments
+                elif line.lstrip().rstrip() == "/**":
+                    normalComment = True
+                    fail = True
+                elif normalComment:
+                    fail = True
+                    if line.startswith("*/"):
+                        normalComment = False
+                        
+                elif line.startswith(start.lstrip()) or line.startswith(middle.lstrip().rstrip()) or line.startswith(end.lstrip()):
+                    # skip if it is a javadoc comment
+                    continue
+
+                # find where the functions are
+                elif line.startswith("public") or line.startswith("private") or line.startswith("protected") or line.startswith("default"):
+                    if line.endswith("{") or line.endswith(";"):
+                        line = line[:-2]
+                    elif "abstract" in  line and line.endswith(";"):
+                        line = line[:-1]
+                    else:
+                        fail = True
+
+                    bracketIndex = line.find("(")
+                    line = line[:bracketIndex + 1] + " " + line[bracketIndex + 1:]
+                    if (bracketIndex == -1):
+                        fail = True
+                    line = line.split()
+                    
+                    functionName = ""
+
+                    for i, word in enumerate(line):
+                        if "(" in word and word != line[1]:
+                            word = word.split("(")
+                            if word[0][-1] == ">":
+                                fail = True
+                            functionName = word[0]
+                            # found functionName so break
+                            fail = False
+                            break
                         else:
                             fail = True
 
-                        bracketIndex = line.find("(")
-                        line = line[:bracketIndex + 1] + " " + line[bracketIndex + 1:]
-                        if (bracketIndex == -1):
-                            fail = True
-                        line = line.split()
+                    if functionName in functions[item] and not fail:
+                        functionParams = functions[item][functionName][2].split("|")
+                        writeLines.append(start + "\n")
+                        #explanation
+                        writeLines.append(middle + functions[item][functionName][1] + "\n")
+                        for i, functionParam in enumerate(functionParams):
+                            # parameters
+                            if (functionParam == ""): continue
+                            writeLines.append(middle + "@param " + functionParam + ": " + parameters[functionParam] + "\n")
+                        # return type
+                        writeLines.append(middle + "@return " + functions[item][functionName][0] + ": " + functions[item][functionName][3] + "\n")
+                        writeLines.append(end + "\n")
+                        writeLines.append(originalLine)
                         
-                        functionName = ""
-                        
-                        for i, word in enumerate(line):
-                            if "(" in word and word != line[1]:
-                                word = word.split("(")
-                                if word[0][-1] == ">":
-                                    fail = True
-                                functionName = word[0]
-                        
-                        if functionName in functions[item] and not fail:
-                            functionParams = functions[item][functionName][2].split("|")
-                            output.write(start + "\n")
-                            #explanation
-                            output.write(middle + functions[item][functionName][1] + "\n")
-                            for i, functionParam in enumerate(functionParams):
-                                # parameters
-                                if (functionParam == ""): continue
-                                output.write(middle + "@param " + functionParam + ": " + parameters[functionParam] + "\n")
-                            # return type
-                            output.write(middle + "@return " + functions[item][functionName][0] + ": " + functions[item][functionName][3] + "\n")
-                            output.write(end + "\n")
-                            output.write(originalLine)
-                    elif line.startswith(start.lstrip()) or line.startswith(middle.lstrip().rstrip()) or line.startswith(end.lstrip()):
-                        # skip if it is a javadoc comment
-                        continue
-                    else:
-                        # write line anyways lol
-                        fail = True
-                    if fail:
-                        output.write(originalLine)
-            output.write("\n\n")
+                
+                
+                else:
+                    # write line anyways lol
+                    fail = True
+                if fail:
+                    writeLines.append(originalLine)
+        file.close()
+        
+        with open(outFile, "w") as output:
+            for line in writeLines:
+                output.write(line)
+            # print(item + " done")
+            
     print("finished commenting go check the files")
+
+elif (state == "clear"):
+    for filename in os.listdir(directory):
+        allLines = []
+        if not filename.endswith(".java"):
+            continue
+
+        # exclude IOUtils.java
+        if filename == "IOUtils.java":
+            continue
+        
+        with open(filename, "r") as file:
+            normalComment = False
+            
+            for line in file:
+                # make sure that only "/**" is in the line -> start of normal comment
+                if line.lstrip().rstrip() == "/**":
+                    normalComment = True
+                    
+                if normalComment:
+                    # normal comment ends
+                    if line.lstrip().startswith("*/"):
+                        normalComment = False
+
+                elif line.lstrip().startswith("/***") or line.lstrip().startswith("* ") or line.lstrip().startswith("*/"):
+                    # skip line if it is doc comment
+                    continue
+                
+                allLines.append(line)
+        file.close()
+        
+        with open(filename, "w") as file:
+            for line in allLines:
+                file.write(line)
+            print(filename + " done")
+        file.close()
+
+    print("finished clearing comments go check the files")
